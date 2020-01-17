@@ -1,0 +1,101 @@
+This post is to help how to login to MapD database via shell script and how we can achieve following operation:
+  -> Copy data from csv file to table.
+  -> Copy data from table to csv file.
+  
+1) Login to omnisql data base using shell script:
+-------------------------------------------------
+I have already installed omnisql database to my server. How to install omnisql you can follow official site of omni-sci.
+
+For me in server omnisql is present at following path : /opt/omnisci/bin/
+Hence i will how we can connects with omnisql db.
+
+(i) Connect with omnisql from shell:
+    {SERVER}$ /opt/omnisci/bin/omnisql --db {DB_NAME} --user {DB_USER} -p {DB_PASSWD}
+    
+    let say DB_NAME = DB_USER =DB_PASSWD all are same = mapd_load than we can connect with omnisql as follow:
+    
+    {SERVER}$ /opt/omnisci/bin/omnisql --db mapd_load --user mapd_load -p mapd_load
+    
+    omnisql> \t   (\t will show all the table present. Let say only STUDENT_MAST is present than output will be)
+    omnisql> STUDENT_MAST
+    
+    omnisql> \d STUDENT_MAST (\d {table_name} will describe table)
+    omnisql> CREATE STUDENT_MAST(
+    studentName {datatype},
+    studentId   {dataType}
+    );
+    
+    omnisql> \q (\q is used to quit from omnisql )
+    
+    {SERVER}$ 
+    
+
+(ii) Use ShellScript .sh file to connect with omnisql:
+
+    When we connect with OracleDb using shell script we connect as below:
+    
+    DB_NAME="abc"
+    DB_PASSWD="abc"
+    DB_SID="BPLORA"
+    
+    DB_RESULT=`SQLPLUS -S ${DB_NAME}/${DB_PASSWD}@${DB_SID} << END
+    SELECT * FROM STUDENT_MAST;
+    exit
+    END`
+    
+    # now if u want to store DB_RESULT in file than you can do it like:
+    echo "$DB_RESULT" >> "${PATH_TO_SAVFILE}/StudentData.txt"
+    
+    ---------------------
+    In Same way we can connect with omnisql database also and can do whatever operation we want.
+    
+    DB_NAME="mapd_load"
+    DB_USER="mapd_load"
+    DB_PASSWD="mapd_load"
+    
+    DB_RESULT=`/opt/omnisci/bin/omnisql --db $DB_NAME --user $DB_USER -p $DB_PASSWD
+    SELECT * FROM STUDENT_MAST;
+    \q
+    END`
+    
+    # Please note here that when we want to exit from oracle db we use "exit" but for to quit from omnisql we use "\q"
+    # Now in same way as above we can output this data to file.
+    echo "$DB_RESULT" >> "${PATH_TO_SAVFILE}/StudentData.txt"
+    
+    
+2) Load Data from CSV file to table in omnisql:
+-----------------------------------------------
+
+  Let say we have one csv file "StudentData.csv" file which consist of student data (student name & Id)seperated by "," (comma).
+  than we can load this file to STUDENT_MAST as follow using shell script.
+  
+  DB_RESULT=`/opt/omnisci/bin/omnisql --db $DB_NAME --user $DB_USER -p $DB_PASSWD
+  COPY STUDENT_MAST FROM '${PATH_OF_FILE}/StudentData.csv' WITH (DELIMITER=',');
+  \q
+  END`
+  
+  
+3) Load Data from table to csv file in omnisql:
+------------------------------------------------
+
+  Let Say now you want to do some analysis on student data present in  STUDENT_MAST table than you can export data rom table to csv 
+  file as below:
+  
+  DB_RESULT=`/opt/omnisci/bin/omnisql --db $DB_NAME --user $DB_USER -p $DB_PASSWD
+  COPY (SELECT * FROM STUDENT_MAST) TO '${PATH_OF_FILE}/StudentData_2.csv' WITH (DELIMITER=',');
+  \q
+  END`
+  
+  Above query will load data to StudentData_2.csv file. or you can load as below also.
+  DB_RESULT=`/opt/omnisci/bin/omnisql --db $DB_NAME --user $DB_USER -p $DB_PASSWD
+  SELECT STUDENT_NAME, STUDENT_ID FROM STUDENT_MAST;
+  \q
+  END`
+  
+  #And now redirect to csv file.
+  echo "$DB_RESULT" >> "${PATH_OF_FILE}/StudentData_2.csv"
+  
+================================================================
+
+Hope this post will help you. With the time will keep updating the same.
+IF you have any doubt or problem in any of the above query than contact me by gmail: menariyanarayanlal@gmail.com
