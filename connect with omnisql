@@ -1,3 +1,9 @@
+#########################################################################################################
+#  Post   : Connect with omnisql by shell script                                                        #
+#  Aim    : To help people who are new to omnisql and want to connect with omnisql using shell script.  #
+#  Author : Narayan Lal Menariya                                    18-01-202 01:50:03 AM               #
+#########################################################################################################
+
 This post is to help how to login to MapD database via shell script and how we can achieve following operation:
   -> Copy data from csv file to table.
   -> Copy data from table to csv file.
@@ -6,8 +12,8 @@ This post is to help how to login to MapD database via shell script and how we c
 -------------------------------------------------
 I have already installed omnisql database to my server. How to install omnisql you can follow official site of omni-sci.
 
-For me in server omnisql is present at following path : /opt/omnisci/bin/
-Hence i will how we can connects with omnisql db.
+For me in my server omnisql is present at following path : /opt/omnisci/bin/
+Hence i will show how we can connects with omnisql db.
 
 (i) Connect with omnisql from shell:
     {SERVER}$ /opt/omnisci/bin/omnisql --db {DB_NAME} --user {DB_USER} -p {DB_PASSWD}
@@ -21,8 +27,8 @@ Hence i will how we can connects with omnisql db.
     
     omnisql> \d STUDENT_MAST (\d {table_name} will describe table)
     omnisql> CREATE STUDENT_MAST(
-    studentName {datatype},
-    studentId   {dataType}
+    STUDENT_NAME {datatype},
+    STUDENT_ID   {dataType}
     );
     
     omnisql> \q (\q is used to quit from omnisql )
@@ -58,7 +64,7 @@ Hence i will how we can connects with omnisql db.
     \q
     END`
     
-    # Please note here that when we want to exit from oracle db we use "exit" but for to quit from omnisql we use "\q"
+    # Please note here, that when we want to exit from oracle db we use "exit" but for to quit from omnisql we use "\q"
     # Now in same way as above we can output this data to file.
     echo "$DB_RESULT" >> "${PATH_TO_SAVFILE}/StudentData.txt"
     
@@ -66,8 +72,8 @@ Hence i will how we can connects with omnisql db.
 2) Load Data from CSV file to table in omnisql:
 -----------------------------------------------
 
-  Let say we have one csv file "StudentData.csv" file which consist of student data (student name & Id)seperated by "," (comma).
-  than we can load this file to STUDENT_MAST as follow using shell script.
+  Let say we have one csv file "StudentData.csv" file which consist of hundreds of student data record (let say only student name & Id)seperated by "," (comma).
+  than we can load this file to STUDENT_MAST table as follow using shell script.
   
   DB_RESULT=`/opt/omnisci/bin/omnisql --db $DB_NAME --user $DB_USER -p $DB_PASSWD
   COPY STUDENT_MAST FROM '${PATH_OF_FILE}/StudentData.csv' WITH (DELIMITER=',');
@@ -78,7 +84,7 @@ Hence i will how we can connects with omnisql db.
 3) Load Data from table to csv file in omnisql:
 ------------------------------------------------
 
-  Let Say now you want to do some analysis on student data present in  STUDENT_MAST table than you can export data rom table to csv 
+  Let Say now you want to do some analysis on student data present in  STUDENT_MAST table than you can export data from table to csv 
   file as below:
   
   DB_RESULT=`/opt/omnisci/bin/omnisql --db $DB_NAME --user $DB_USER -p $DB_PASSWD
@@ -86,7 +92,7 @@ Hence i will how we can connects with omnisql db.
   \q
   END`
   
-  Above query will load data to StudentData_2.csv file. or you can load as below also.
+  #Above query will load data to StudentData_2.csv file. or you can load as below also.
   DB_RESULT=`/opt/omnisci/bin/omnisql --db $DB_NAME --user $DB_USER -p $DB_PASSWD
   SELECT STUDENT_NAME, STUDENT_ID FROM STUDENT_MAST;
   \q
@@ -98,4 +104,4 @@ Hence i will how we can connects with omnisql db.
 ================================================================
 
 Hope this post will help you. With the time will keep updating the same.
-IF you have any doubt or problem in any of the above query than contact me by gmail: menariyanarayanlal@gmail.com
+IF you have any doubt or problem in any of the above query than can contact me by gmail: menariyanarayanlal@gmail.com
