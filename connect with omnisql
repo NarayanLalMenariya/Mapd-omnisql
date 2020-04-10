@@ -59,7 +59,7 @@ Hence i will show how we can connects with omnisql db.
     DB_USER="mapd_load"
     DB_PASSWD="mapd_load"
     
-    DB_RESULT=`/opt/omnisci/bin/omnisql --db $DB_NAME --user $DB_USER -p $DB_PASSWD
+    DB_RESULT=`/opt/omnisci/bin/omnisql --db $DB_NAME --user $DB_USER -p $DB_PASSWD << END
     SELECT * FROM STUDENT_MAST;
     \q
     END`
@@ -75,7 +75,7 @@ Hence i will show how we can connects with omnisql db.
   Let say we have one csv file "StudentData.csv" file which consist of hundreds of student data record (let say only student name & Id)seperated by "," (comma).
   than we can load this file to STUDENT_MAST table as follow using shell script.
   
-  DB_RESULT=`/opt/omnisci/bin/omnisql --db $DB_NAME --user $DB_USER -p $DB_PASSWD
+  DB_RESULT=`/opt/omnisci/bin/omnisql --db $DB_NAME --user $DB_USER -p $DB_PASSWD << END
   COPY STUDENT_MAST FROM '${PATH_OF_FILE}/StudentData.csv' WITH (DELIMITER=',');
   \q
   END`
@@ -87,13 +87,13 @@ Hence i will show how we can connects with omnisql db.
   Let Say now you want to do some analysis on student data present in  STUDENT_MAST table than you can export data from table to csv 
   file as below:
   
-  DB_RESULT=`/opt/omnisci/bin/omnisql --db $DB_NAME --user $DB_USER -p $DB_PASSWD
+  DB_RESULT=`/opt/omnisci/bin/omnisql --db $DB_NAME --user $DB_USER -p $DB_PASSWD << END
   COPY (SELECT * FROM STUDENT_MAST) TO '${PATH_OF_FILE}/StudentData_2.csv' WITH (DELIMITER=',');
   \q
   END`
   
   #Above query will load data to StudentData_2.csv file. or you can load as below also.
-  DB_RESULT=`/opt/omnisci/bin/omnisql --db $DB_NAME --user $DB_USER -p $DB_PASSWD
+  DB_RESULT=`/opt/omnisci/bin/omnisql --db $DB_NAME --user $DB_USER -p $DB_PASSWD << END
   SELECT STUDENT_NAME, STUDENT_ID FROM STUDENT_MAST;
   \q
   END`
